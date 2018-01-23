@@ -25,6 +25,7 @@
     <module>adjective</module>
     <module>noun</module>
     <module>insult</module>
+    <module>hystrix-dashboard</module>
   </modules>
 
   <build>

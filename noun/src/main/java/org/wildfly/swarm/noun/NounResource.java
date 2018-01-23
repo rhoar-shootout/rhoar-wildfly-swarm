@@ -1,4 +1,4 @@
-package org.wildfly.swarm.adjective;
+package org.wildfly.swarm.noun;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -19,7 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.wildfly.swarm.adjective.model.Adjective;
+import org.wildfly.swarm.noun.model.Noun;
 import org.wildfly.swarm.topology.Advertise;
 
 /**
@@ -27,19 +27,19 @@ import org.wildfly.swarm.topology.Advertise;
  */
 @Path("/")
 @ApplicationScoped
-@Advertise("adjective")
-public class AdjectiveResource {
+@Advertise("noun")
+public class NounResource {
 
-    private List<Adjective> adjectives = new ArrayList<>();
+    private List<Noun> nouns = new ArrayList<>();
 
     @PostConstruct
     public void loadData() {
         try {
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("adjectives.txt");
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("nouns.txt");
             if (is != null) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                 reader.lines()
-                        .forEach(adj -> adjectives.add(new Adjective(adj.trim())));
+                        .forEach(noun -> nouns.add(new Noun(noun.trim())));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,40 +48,40 @@ public class AdjectiveResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Adjective getAdjective() {
-        return adjectives.get(new Random().nextInt(adjectives.size()));
+    public Noun getNoun() {
+        return nouns.get(new Random().nextInt(nouns.size()));
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdjective(Adjective adjective) {
-        if (adjectives.contains(adjective)) {
+    public Response addNoun(Noun noun) {
+        if (nouns.contains(noun)) {
             return Response
                     .status(Response.Status.CONFLICT)
                     .build();
         }
 
-        adjectives.add(adjective);
+        nouns.add(noun);
 
         return Response
                 .status(Response.Status.CREATED)
-                .entity(adjective)
+                .entity(noun)
                 .build();
     }
 
     @DELETE
-    @Path("/{adjective}")
-    public Response deleteAdjective(@PathParam("adjective") String adjectiveName) {
-        Adjective deletingAdjective = new Adjective(adjectiveName);
+    @Path("/{noun}")
+    public Response deleteNoun(@PathParam("noun") String nounName) {
+        Noun deletingNoun = new Noun(nounName);
 
-        if (!adjectives.contains(deletingAdjective)) {
+        if (!nouns.contains(deletingNoun)) {
             return Response
                     .status(Response.Status.NOT_FOUND)
                     .build();
         }
 
-        adjectives.remove(deletingAdjective);
+        nouns.remove(deletingNoun);
 
         return Response
                 .noContent()

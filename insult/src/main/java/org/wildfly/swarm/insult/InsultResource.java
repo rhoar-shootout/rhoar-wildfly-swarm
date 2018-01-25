@@ -19,6 +19,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.wildfly.swarm.insult.adjective.AdjectiveService;
 import org.wildfly.swarm.insult.model.Insult;
 import org.wildfly.swarm.insult.model.Name;
+import org.wildfly.swarm.insult.noun.NounCommand;
 import org.wildfly.swarm.insult.noun.NounService;
 import org.wildfly.swarm.topology.Topology;
 
@@ -60,7 +61,7 @@ public class InsultResource {
         AdjectiveService adjService = adjTarget.proxy(AdjectiveService.class);
 
         return new Insult()
-                .noun(nounService.getNoun().getNoun())
+                .noun(new NounCommand(nounServiceUrl).execute().getNoun())
                 .adj1(adjService.getAdjective().getAdjective())
                 .adj2(adjService.getAdjective().getAdjective())
                 .name(name != null ? name.getName() : null);
